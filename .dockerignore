@@ -1,0 +1,6 @@
+README.md
+/.venv/
+.env
+/todo-list-frontend/
+/postgres_data/
+.gitignore

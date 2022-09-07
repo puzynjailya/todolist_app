@@ -1,0 +1,55 @@
+version: '3.9'
+services:
+
+  frontend:
+    build:
+      context: ./todo-list-frontend/
+      dockerfile: ./docker/Dockerfile
+    image: puzynjailya/todolist_front
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./todo-list-frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+
+  api:
+    build:
+      context: .
+    image: puzynjailya/todolist
+    ports:
+      - 8000:8000
+    depends_on:
+      pg:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    volumes:
+      - .:/code
+
+  migrations:
+    build:
+      context: .
+    image: puzynjailya/todolist
+    depends_on:
+      pg:
+        condition: service_healthy
+    command: bash -c "
+             python manage.py makemigrations && 
+             python manage.py migrate"
+    volumes:
+      - .:/code
+
+  pg:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: tdl_db
+      POSTGRES_USER: tdl_2022
+      POSTGRES_PASSWORD: G3OWuzMdhY7SHlsgyeChKbU_oP26yItgptzapVoh9gk
+    volumes:
+      - ./postgres_data/:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
