@@ -1,6 +1,7 @@
 .env
 venv/
 docker_commands.txt
+postgres_data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
