@@ -12,7 +12,7 @@ jobs:
         run: docker build -t puzynjailya/todolist:$GITHUB_RUN_ID .
       # Login to docker
       - name: docker login
-        run: echo ${{ secrets.DOCKERHUB_TOKEN}} | docker login -u {{ secrets.DOCKERHUB_USERNAME}} -- password-stdin
+        run: echo ${{ secrets.DOCKERHUB_TOKEN}} | docker login -u ${{ secrets.DOCKERHUB_USERNAME}} -- password-stdin
       # Push container
       - name: docker push
         run: docker push puzynjailya/todolist:$GITHUB_RUN_ID
