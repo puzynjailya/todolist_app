@@ -4,11 +4,15 @@ jobs:
   build and push:
     runs-on: ubuntu-latest
     steps:
-      name: clone code
-      uses: actions/checkout@v2
-      name: docker build
-      run: docker build -t puzynjailya/todolist:$GITHUB_RUN_ID
-      name: docker login
-      run: echo ${{ secrets.DOCKERHUB_TOKEN}} | docker login -u {{ secrets.DOCKERHUB_USERNAME}} -- password-stdin
-      name: docker push
-      run: docker push puzynjailya/todolist:$GITHUB_RUN_ID
+      # Code clone
+      - name: clone code
+        uses: actions/checkout@v2
+      # Build container
+      - name: docker build
+        run: docker build -t puzynjailya/todolist:$GITHUB_RUN_ID
+      # Login to docker
+      - name: docker login
+        run: echo ${{ secrets.DOCKERHUB_TOKEN}} | docker login -u {{ secrets.DOCKERHUB_USERNAME}} -- password-stdin
+      # Push container
+      - name: docker push
+        run: docker push puzynjailya/todolist:$GITHUB_RUN_ID
