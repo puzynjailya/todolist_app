@@ -1,12 +1,12 @@
 FROM python:3.10-slim
 
 # Main folder layer
-WORKDIR /code
+WORKDIR /app
 # Copy and install dependicies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 # Copy project to image
-COPY . /code
+COPY app /app
 
 
 ENV DEBUG=TRUE

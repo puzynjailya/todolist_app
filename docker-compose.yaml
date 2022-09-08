@@ -18,13 +18,14 @@ services:
     image: puzynjailya/todolist
     ports:
       - 8000:8000
+    restart: always
     depends_on:
       pg:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
     volumes:
-      - .:/code
+      - .:/code/
 
   migrations:
     build:
@@ -37,7 +38,7 @@ services:
              python manage.py makemigrations && 
              python manage.py migrate"
     volumes:
-      - .:/code
+      - .:/code/
 
   pg:
     image: postgres:latest
@@ -52,4 +53,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+volumes:
+  postgres_data:
 

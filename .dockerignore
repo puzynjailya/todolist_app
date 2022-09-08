@@ -1,6 +1,11 @@
-README.md
-/.venv/
+*.md*
+venv
 .env
-/todo-list-frontend/
-/postgres_data/
+todo-list-frontend
+postgres_data
 .gitignore
+.idea
+.git
+.cache
+__pycache__
+templates
