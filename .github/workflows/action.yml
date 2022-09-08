@@ -1,6 +1,5 @@
 name: Continious Integration
 on: [push]
-description: 'CI\CD implementing'
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
