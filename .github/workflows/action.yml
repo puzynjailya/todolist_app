@@ -31,7 +31,7 @@ jobs:
           mkdir deploy
           mkdir -p deploy/todo-list-frontend/docker/
           cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
-          cat ./todo-list-frontend/docker/nginx.conf > deploy/todo-list-frontend/docker/nginx.conf
+          cat /configs/nginx.conf > deploy/todo-list-frontend/docker/nginx.conf
       - name: clone data to server
         uses: appleboy/scp-action@master
         with:
