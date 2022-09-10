@@ -16,3 +16,37 @@ jobs:
       # Push container
       - name: docker push
         run: docker push puzynjailya/todolist:$GITHUB_RUN_ID
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    env:
+      DB_USER: ${{secrets.DB_USER}}
+      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+      DB_NAME: ${{secrets.DB_NAME}}
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: create and fill config files
+        run: |
+        mkdir deploy
+        cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
+      - name: clone data to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.SSH_USERNAME}}
+          password: ${{secrets.SSH_PASSWORD}}
+          source: "deploy/docker-compose.yaml"
+          target: "tdlapp"
+          strip_components: 1
+      - name: run docker-compose
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.SSH_USERNAME}}
+          password: ${{secrets.SSH_PASSWORD}}
+          script: |
+            cd tdlapp
+            echo ${{secrets.SSH_PASSWORD}} | sudo -S docker-compose up -d
+
+

@@ -1,3 +1,6 @@
+#docker-compose.yaml
+#docker-compose-ci.yaml
+
 .env
 venv/
 docker_commands.txt
