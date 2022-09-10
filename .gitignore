@@ -1,6 +1,10 @@
 docker-compose.yaml
 docker_commands.txt
 /.idea
+/postgres_data/
+ttt.txt
+
+
 
 .env
 venv/
