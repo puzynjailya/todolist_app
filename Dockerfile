@@ -8,8 +8,6 @@ RUN pip install -r requirements.txt
 # Copy project to image
 COPY app /app
 
-
-ENV DEBUG=TRUE
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "ENV_PATH=/etc/env", "manage.py", "runserver", "0.0.0.0:8000"]
