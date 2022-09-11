@@ -22,13 +22,13 @@ env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
 )
-env.read_env(env.str('ENV_PATH', '.env'))
+env.read_env(env.str('ENV_PATH', '.env.deploy'))
 
 # Set the project base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# Take environment variables from .env.deploy file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env.deploy'))
 
 # False if not in os.environ because of casting above
 # SECURITY WARNING: don't run with debug turned on in production!
