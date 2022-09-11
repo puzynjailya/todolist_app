@@ -29,14 +29,10 @@ jobs:
       - name: create and fill config files
         run: |
           mkdir deploy
-          printf "deploy folder has been created"
           mkdir -p deploy/todo-list-frontend/docker/
-          printf "frontend folder has been created"
-          cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
-          printf "compose file has been created"
-          printf "starting copy nginx file"
-          ls -la ./configs/
+          cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml        
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S cp ./configs/nginx.conf deploy/todo-list-frontend/docker/nginx.conf
+          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod 777 deploy/todo-list-frontend/docker/nginx.conf
       - name: clone data to server
         uses: appleboy/scp-action@master
         with:
