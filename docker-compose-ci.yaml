@@ -12,6 +12,8 @@ services:
   api:
     image: puzynjailya/todolist:$GITHUB_RUN_ID
     restart: always
+    env_file:
+      - ./etc/env/.env
     ports:
       - 8000:8000
     depends_on:
@@ -25,6 +27,8 @@ services:
   migrations:
     image: puzynjailya/todolist:$GITHUB_RUN_ID
     restart: always
+    env_file:
+      - ./etc/env/.env
     depends_on:
       pg:
         condition: service_healthy
@@ -37,6 +41,8 @@ services:
   pg:
     image: postgres:latest
     restart: always
+    env_file:
+      - ./etc/env/.env
     environment:
       POSTGRES_DB: $DB_NAME
       POSTGRES_USER: $DB_USER
