@@ -34,6 +34,7 @@ jobs:
           cat ./configs/nginx.conf > deploy/todo-list-frontend/docker/nginx.conf
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 777 deploy/todo-list-frontend/docker/
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod 777 deploy/todo-list-frontend/docker/nginx.conf
+          cat deploy/todo-list-frontend/docker/nginx.conf
       - name: clone data to server
         uses: appleboy/scp-action@master
         with:
