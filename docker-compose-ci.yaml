@@ -7,7 +7,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - .configs/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./todo-list-frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
 
   api:
     image: puzynjailya/todolist:$GITHUB_RUN_ID
