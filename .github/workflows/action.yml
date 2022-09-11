@@ -30,11 +30,8 @@ jobs:
         run:
           mkdir deploy
           mkdir -p deploy/todo-list-frontend/docker/
-          chmod -R 777 deploy/todo-list-frontend/docker/
           cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml        
-          cat ./configs/nginx.conf > deploy/todo-list-frontend/docker/nginx.conf
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod 777 deploy/todo-list-frontend/docker/nginx.conf
-          ls -la deploy/todo-list-frontend/docker/
+          cp ./configs/nginx.conf deploy/todo-list-frontend/docker/nginx.conf
       - name: clone data to server
         uses: appleboy/scp-action@master
         with:
