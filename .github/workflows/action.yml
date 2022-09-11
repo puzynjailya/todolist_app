@@ -27,18 +27,22 @@ jobs:
       - name: clone code
         uses: actions/checkout@v2
       - name: create and fill config files
-        run:
+        run: |
           mkdir deploy
+          printf "Create deploy"
           mkdir -p deploy/todo-list-frontend/docker/
-          cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml        
+          printf "Create config"
+          cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
+          printf "Copy deploy"
           cp ./configs/nginx.conf deploy/todo-list-frontend/docker/nginx.conf
+          printf "Create conf"
       - name: clone data to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "deploy/*"
+          source: "deploy/docker-compose.yaml, deploy/todo-list-frontend/docker/nginx.conf"
           target: "tdlapp"
           strip_components: 1
       - name: run docker-compose
