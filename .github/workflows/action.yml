@@ -24,9 +24,11 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
     steps:
       - name: clone code
         uses: actions/checkout@v2
+
       - name: create and fill config files
         run: |
           mkdir deploy
@@ -34,6 +36,7 @@ jobs:
           cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
           cp ./configs/nginx.conf deploy/todo-list-frontend/docker/nginx.conf
           cat ,/configs/.env.deploy | envsubst > deploy/.env
+
       - name: clone data to server
         uses: appleboy/scp-action@master
         with:
@@ -44,7 +47,6 @@ jobs:
           target: "todolist"
           strip_components: 1
 
-      # Run docker-compose
       - name: run docker-compose
         uses: appleboy/ssh-action@master
         with:
@@ -55,13 +57,13 @@ jobs:
             cd todolist
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
 
-        # Clean docker images
-        - name: clean images
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.SSH_USERNAME }}
-            password: ${{ secrets.SSH_PASSWORD }}
-            script: docker system prune -a -f
+      - name: clean images
+        if: always()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: docker system prune -a -f
 
 
