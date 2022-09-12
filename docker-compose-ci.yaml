@@ -7,7 +7,9 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./todo-list-frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./app/configs/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - frontend_net
 
   api:
     image: puzynjailya/todolist:$GITHUB_RUN_ID
@@ -23,6 +25,9 @@ services:
         condition: service_completed_successfully
     volumes:
       - .:/code/
+    networks:
+      - backend_net
+      - frontend_net
 
   migrations:
     image: puzynjailya/todolist:$GITHUB_RUN_ID
@@ -37,6 +42,8 @@ services:
              python manage.py migrate"
     volumes:
       - .:/code/
+    networks:
+      - backend_net
 
   pg:
     image: postgres:latest
@@ -54,7 +61,15 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - backend_net
 
 volumes:
   postgres_data:
+
+networks:
+  backend_net:
+    driver: bridge
+  frontend_net:
+    driver: bridge
 
