@@ -18,7 +18,7 @@ services:
     image: puzynjailya/todolist:$GITHUB_RUN_ID
     restart: always
     env_file:
-      -.env
+      - .env
     ports:
       - 8000:8000
     depends_on:
