@@ -23,8 +23,6 @@ services:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-    volumes:
-      - .:/code/
     networks:
       - backend_net
       - frontend_net
@@ -40,8 +38,6 @@ services:
     command: bash -c "
              python manage.py makemigrations && 
              python manage.py migrate"
-    volumes:
-      - .:/code/
     networks:
       - backend_net
 
