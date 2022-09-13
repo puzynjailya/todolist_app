@@ -51,7 +51,7 @@ services:
       - backend_net
 
   pg:
-    image: postgres:latest
+    image: postgres:14.5-alpine
     restart: always
     env_file:
       - .env
