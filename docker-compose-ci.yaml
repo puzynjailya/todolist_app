@@ -38,7 +38,6 @@ services:
 
   migrations:
     image: puzynjailya/todolist:$GITHUB_RUN_ID
-    restart: always
     env_file:
       - .env
     depends_on:
@@ -54,13 +53,13 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
     volumes:
       - ./postgres_data/:/var/lib/postgresql/data
     healthcheck:
-      test: pg_isready -U postgres -d postgres
+      test: pg_isready -U $DB_USER -d $DB_NAME
       interval: 5s
       timeout: 5s
       retries: 5
