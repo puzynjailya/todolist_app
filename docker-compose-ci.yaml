@@ -44,9 +44,7 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-    command: bash -c "
-             #python manage.py makemigrations && 
-             python manage.py migrate"
+    command: sh -c "python manage.py migrate"
     networks:
       - backend_net
 
