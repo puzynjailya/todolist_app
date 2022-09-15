@@ -22,8 +22,6 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-      migrations:
-        condition: service_completed_successfully
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost || exit 1
       interval: 60s
