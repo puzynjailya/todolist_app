@@ -8,6 +8,7 @@ services:
       - 80:80
     volumes:
       - ./todo-list-frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./configs/static/:/opt/static/
     networks:
       - frontend_net
 
