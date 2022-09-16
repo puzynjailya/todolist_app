@@ -66,7 +66,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script:  |
             cd todolist
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker system prune -a
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker image prune -a
 
 
 

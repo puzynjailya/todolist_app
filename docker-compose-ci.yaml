@@ -20,6 +20,8 @@ services:
     depends_on:
       pg:
         condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     command: python manage.py runserver 0.0.0.0:8000
     networks:
       - backend_net
@@ -32,17 +34,13 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-    command: bash -c "
-             python manage.py makemigrations &&  
-             python manage.py migrate"
+    command: sh -c "python manage.py migrate"
     networks:
       - backend_net
 
   pg:
     image: postgres:14.5-alpine
     restart: always
-    env_file:
-      - .env
     environment:
       POSTGRES_DB: $DB_NAME
       POSTGRES_USER: $DB_USER
