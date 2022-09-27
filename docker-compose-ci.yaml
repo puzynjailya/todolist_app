@@ -2,7 +2,7 @@ version: '3.9'
 services:
 
   frontend:
-    image: puzynjailya/todolist_front
+    image: sermalenk/skypro-front:lesson-35
     restart: always
     ports:
       - 80:80
