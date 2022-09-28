@@ -24,6 +24,8 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      VK_OAUTH2_KEY: ${{ secrets.VK_OAUTH2_KEY }}
+      VK_OAUTH2_SECRET: ${{ secrets.VK_OAUTH2_SECRET }}
 
     steps:
       - name: clone code
