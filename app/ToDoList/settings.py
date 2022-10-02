@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     "core",
+    "goals"
 ]
 
 MIDDLEWARE = [
@@ -154,7 +155,9 @@ AUTH_USER_MODEL = "core.User"
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
+
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'API приложения ToDoList',

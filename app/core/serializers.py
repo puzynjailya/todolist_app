@@ -7,6 +7,10 @@ from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 
 from core.models import User
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'email']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(required=True,
