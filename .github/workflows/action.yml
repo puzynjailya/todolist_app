@@ -47,7 +47,7 @@ jobs:
             --env-file $(pwd)/deploy/.env \
             --entrypoint '' \
             -v $(pwd)/deploy/nginx/static/:/opt/todolist/static/:rw \
-            puzynjailya/todolist:$GITHUB_RUN_ID
+            puzynjailya/todolist:$GITHUB_RUN_ID \
             python manage.py collectstatic -c --no-input
 
       - name: clone data to server
