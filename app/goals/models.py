@@ -4,19 +4,12 @@ from django.utils import timezone
 from core.models import User
 
 
-class GoalCategory(models.Model):
-    user = models.ForeignKey(User, verbose_name='Автор', on_delete=models.RESTRICT)
-    title = models.CharField(verbose_name='Название', max_length=255)
-    created_date = models.DateTimeField(verbose_name='Дата создания')
-    last_update_date = models.DateTimeField(verbose_name='Дата последнего обновления')
-    is_deleted = models.BooleanField(verbose_name='В архиве', default=False)
-
+class DatesModelMixin(models.Model):
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        abstract = True  # Помечаем класс как абстрактный – для него не будет таблички в БД
 
-    def __str__(self):
-        return self.title
+    created = models.DateTimeField(verbose_name="Дата создания")
+    updated = models.DateTimeField(verbose_name="Дата последнего обновления")
 
     # Комментарий для себя
     # ----------------------------------------------------------------------------------------------------------------
@@ -27,13 +20,26 @@ class GoalCategory(models.Model):
     # Также важно, чтобы вы передавали аргументы, которые можно передать методу модели -
     # это то, что делает часть *args, **kwargs.
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.created_date = timezone.now()
-        self.last_update_date = timezone.now()
+        if not self.id:  # Когда модель только создается – у нее нет id
+            self.created = timezone.now()
+        self.updated = timezone.now()  # Каждый раз, когда вызывается save, проставляем свежую дату обновления
         return super().save(*args, **kwargs)
 
 
-class Goal(models.Model):
+class GoalCategory(DatesModelMixin):
+    user = models.ForeignKey(User, verbose_name='Автор', on_delete=models.RESTRICT)
+    title = models.CharField(verbose_name='Название', max_length=255)
+    is_deleted = models.BooleanField(verbose_name='В архиве', default=False)
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.title
+
+
+class Goal(DatesModelMixin):
 
     # Комментарий для себя
     # Для создания статуса и приоритета будем использовать классы Choises
@@ -49,9 +55,13 @@ class Goal(models.Model):
         high = 3, 'Высокий'
         critical = 4, 'Критический'
 
+    user = models.ForeignKey(User, verbose_name='Автор', on_delete=models.RESTRICT)
     title = models.CharField(verbose_name='Название', max_length=255)
-    description = models.TextField(max_length=2000)
-    category = models.ForeignKey(to=GoalCategory, on_delete=models.RESTRICT, verbose_name='Категория')
+    description = models.TextField(max_length=2000, verbose_name='Описание', null=True, blank=True)
+    category = models.ForeignKey(to=GoalCategory,
+                                 on_delete=models.CASCADE,
+                                 verbose_name='Категория',
+                                 related_name='goals')
     status = models.PositiveSmallIntegerField(verbose_name="Статус",
                                               choices=Status.choices,
                                               default=Status.to_do
@@ -60,20 +70,28 @@ class Goal(models.Model):
                                                 choices=Priority.choices,
                                                 default=Priority.medium
                                                 )
-    created_date = models.DateTimeField(verbose_name='Дата создания')
-    last_update_date = models.DateTimeField(verbose_name='Дата последнего обновления')
-    dead_line_date = models.DateTimeField(verbose_name='Дата дедлайна')
+
+    due_date = models.DateTimeField(verbose_name='Дата дедлайна')
 
     class Meta:
         verbose_name = 'Цель'
         verbose_name_plural = 'Цели'
 
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.created_date = timezone.now()
-        self.last_update_date = timezone.now()
-        return super().save(*args, **kwargs)
-
     def __str__(self):
         return self.title
+
+
+class GoalComment(DatesModelMixin):
+    goal = models.ForeignKey(to=Goal, verbose_name='цель', on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(to=User, verbose_name='Автор', on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField(max_length=255, verbose_name='Текст')
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return self.text
+
+
 
