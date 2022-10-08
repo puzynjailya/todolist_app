@@ -39,10 +39,10 @@ jobs:
           cp ./configs/nginx.conf deploy/todo-list-frontend/docker/nginx.conf
           cat ./configs/.env.deploy | envsubst > deploy/.env
 
-      - name: collect static
-        run: |
-          docker run --user 0 --rm --env-file $(pwd)/deploy/.env -v $(pwd)/deploy/nginx/static/:/opt/todolist/static/:rw puzynjailya/todolist:$GITHUB_RUN_ID 
-          python manage.py collectstatic -c --no-input
+      #- name: collect static
+        #run: |
+          #docker run --user 0 --rm --env-file $(pwd)/deploy/.env -v $(pwd)/deploy/nginx/static/:/opt/todolist/static/:rw puzynjailya/todolist:$GITHUB_RUN_ID
+          #python manage.py collectstatic -c --no-input
 
       - name: clone data to server
         uses: appleboy/scp-action@master
