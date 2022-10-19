@@ -14,7 +14,6 @@ from pathlib import Path
 import environ
 import os
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -39,7 +38,6 @@ DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -89,7 +87,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ToDoList.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 DATABASES = {
@@ -97,9 +94,16 @@ DATABASES = {
     # ImproperlyConfigured exception if not found
     #
     # The db() method is an alias for db_url().
-    'default': env.db('DATABASE_URL'),
+    'default':
+        {
+            'ENGINE': env('DB_ENGINE'),
+            'NAME': env('DB_NAME'),
+            'USER': env('DB_USER'),
+            'PASSWORD': env('DB_PASSWORD'),
+            'HOST': env('DB_HOST', default='127.0.0.1'),
+            'PORT': env('DB_PORT'),
+        }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -128,7 +132,6 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.ScryptPasswordHasher',
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -139,7 +142,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -160,7 +162,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
-
 SPECTACULAR_SETTINGS = {
     'TITLE': 'API приложения ToDoList',
     'DESCRIPTION': 'Тут будет большое и красивое описание. Но позже. У меня пока лапки',
@@ -168,7 +169,7 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
-#OAuth2 settings:
+# OAuth2 settings:
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 AUTHENTICATION_BACKENDS = (
@@ -183,4 +184,3 @@ SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
 SOCIAL_AUTH_VK_EXTRA_DATA = [
     ('email', 'email')
 ]
-

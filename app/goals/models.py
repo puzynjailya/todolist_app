@@ -1,3 +1,4 @@
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
 
@@ -26,10 +27,56 @@ class DatesModelMixin(models.Model):
         return super().save(*args, **kwargs)
 
 
+class Board(DatesModelMixin):
+    title = models.CharField(max_length=255,
+                             validators=[MinLengthValidator(1)],
+                             verbose_name='Название')
+    is_deleted = models.BooleanField(default=False, verbose_name='Удалена')
+
+    class Meta:
+        verbose_name = 'Доска'
+        verbose_name_plural = 'Доски'
+
+    def __str__(self):
+        return self.title
+
+
+class BoardParticipant(DatesModelMixin):
+    class Roles(models.IntegerChoices):
+        owner = 1, 'Владелец'
+        writer = 2, 'Редактор'
+        reader = 3, 'Читатель'
+
+    user = models.ForeignKey(to=User,
+                             verbose_name='User',
+                             on_delete=models.RESTRICT,
+                             related_name='participants')
+    role = models.PositiveSmallIntegerField(verbose_name='Роли',
+                                            choices=Roles.choices,
+                                            default=Roles.reader)
+    board = models.ForeignKey(to=Board,
+                              verbose_name='Доска',
+                              on_delete=models.RESTRICT,
+                              related_name='participants')
+
+    class Meta:
+        verbose_name = 'Участник'
+        verbose_name_plural = 'Участники'
+        unique_together = ('user', 'board')
+
+    def __str__(self):
+        return self.role
+
+
 class GoalCategory(DatesModelMixin):
     user = models.ForeignKey(User, verbose_name='Автор', on_delete=models.RESTRICT)
     title = models.CharField(verbose_name='Название', max_length=255)
     is_deleted = models.BooleanField(verbose_name='В архиве', default=False)
+    board = models.ForeignKey(Board,
+                              verbose_name='Доска',
+                              on_delete=models.RESTRICT,
+                              related_name='categories',
+                              )
 
     class Meta:
         verbose_name = 'Категория'
@@ -92,6 +139,3 @@ class GoalComment(DatesModelMixin):
 
     def __str__(self):
         return self.text
-
-
-

@@ -1,5 +1,5 @@
 from django.contrib.auth.admin import *
-from goals.models import GoalCategory, Goal, GoalComment
+from goals.models import GoalCategory, Goal, GoalComment, Board
 
 
 @admin.register(GoalCategory)
@@ -25,5 +25,10 @@ class GoalCommentAdmin(admin.ModelAdmin):
     list_display = ('goal','user', 'text')
     search_fields = ('text',)
     readonly_fields = ('created', 'updated')
+
+@admin.register(Board)
+class BoardAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'updated')
+    search_fields = ('title',)
 
 
