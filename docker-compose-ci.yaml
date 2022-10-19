@@ -31,6 +31,8 @@ services:
     image: puzynjailya/todolist:$GITHUB_RUN_ID
     env_file:
       - .env
+    environment:
+      POSTGRES_HOST: $DB_HOST
     depends_on:
       pg:
         condition: service_healthy

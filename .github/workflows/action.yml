@@ -23,6 +23,9 @@ jobs:
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_ENGINE: {{ secrets.DB_ENGINE }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       VK_OAUTH2_KEY: ${{ secrets.VK_OAUTH2_KEY }}
       VK_OAUTH2_SECRET: ${{ secrets.VK_OAUTH2_SECRET }}
