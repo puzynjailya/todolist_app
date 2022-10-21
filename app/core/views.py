@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from core.models import User
 from core.serializers import UserRegistrationSerializer, UserLoginSerializer, GetAndUpdateUserSerializer, \
-    UpdatePasswordSerializer, UserSerializer
+    UpdatePasswordSerializer
 
 
 @extend_schema(description='Тут будет большое и красивое описание',
@@ -27,9 +27,8 @@ class UserLoginView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        login(request=request, user=user)
-        return Response(UserSerializer(user).data)
+        login(request=request, user=serializer.save())
+        return Response(serializer.data)
 
 
 @extend_schema_view(description='Тут будет большое и красивое описание')

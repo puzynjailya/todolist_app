@@ -76,7 +76,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script:  |
             cd todolist
-            docker image prune -a
+            docker image prune -a -f
 
 
 

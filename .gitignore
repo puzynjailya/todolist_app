@@ -70,3 +70,4 @@ __pypackages__/
 .DS_Store
 .idea/
 ./django_static
+/todo-list-frontend/
