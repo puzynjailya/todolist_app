@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission, SAFE_METHODS, IsAuthenticated
 
 from goals.models import BoardParticipant, GoalCategory, Board, Goal
 
@@ -9,17 +9,13 @@ class IsAnAuthor(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
             return True
-        if request.user.id == obj.user_id:
-            return True
-        return False
+        return request.user.id == obj.user_id
 
 
-class BoardPermission(BasePermission):
+class BoardPermission(IsAuthenticated):
     message = 'Редактирование доски доступно только участникам доски'
 
     def has_object_permission(self, request, view, obj: Board):
-        if not request.user.is_authenticated:
-            return False
         # Если метод безопасный, то возвращаем состояние да\нет существует ли юзер в участниках
         if request.method in SAFE_METHODS:
             return BoardParticipant.objects.filter(user=request.user, board=obj).exists()
@@ -27,13 +23,11 @@ class BoardPermission(BasePermission):
         return BoardParticipant.objects.filter(user=request.user, board=obj, role=BoardParticipant.Roles.owner).exists()
 
 
-class GoalCategoryPermission(BasePermission):
+class GoalCategoryPermission(IsAuthenticated):
     message = 'Редактирование категории доступно только участникам доски'
 
     def has_object_permission(self, request, view, obj: GoalCategory):
-        if not request.user.is_authenticated:
-            return False
-        # Если метод безопасный, то возращаем состояние да\нет существует ли юзер в участниках
+        # Если метод безопасный, то возвращаем состояние да\нет существует ли юзер в участниках
         if request.method in SAFE_METHODS:
             return BoardParticipant.objects.filter(user=request.user, board=obj.board).exists()
         # При попытке удаления\изменения выполняем запрос и проверяем владелец ли это
@@ -44,12 +38,10 @@ class GoalCategoryPermission(BasePermission):
                                                ).exists()
 
 
-class GoalPermission(BasePermission):
+class GoalPermission(IsAuthenticated):
     message = 'Редактирование целей доступно только участникам доски'
 
     def has_object_permission(self, request, view, obj: Goal):
-        if not request.user.is_authenticated:
-            return False
         # Если метод безопасный, то возращаем состояние да\нет существует ли юзер в участниках
         if request.method in SAFE_METHODS:
             return BoardParticipant.objects.filter(user=request.user, board=obj.category.board).exists()
@@ -60,11 +52,9 @@ class GoalPermission(BasePermission):
                                             ).exists()
 
 
-class CommentPermission(BasePermission):
+class CommentPermission(IsAuthenticated):
     message = 'Редактирование комментариев доступно только владельцам'
 
     def has_object_permission(self, request, view, obj: Goal):
-        if not request.user.is_authenticated:
-            return False
         # Если метод безопасный, то возращаем состояние да\нет существует ли юзер в участниках
         return any((request.method in SAFE_METHODS, obj.user_id == request.user.id,))
