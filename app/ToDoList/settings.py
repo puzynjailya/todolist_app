@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     "core",
-    "goals"
+    "goals",
+    "bot",
 ]
 
 MIDDLEWARE = [
@@ -71,8 +72,7 @@ ROOT_URLCONF = "ToDoList.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'app/templates']
-        ,
+        "DIRS": [BASE_DIR / 'app/templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -184,3 +184,7 @@ SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
 SOCIAL_AUTH_VK_EXTRA_DATA = [
     ('email', 'email')
 ]
+
+
+# Telegram token
+TG_TOKEN = '5777575210:AAFqA9D6fuspSNSEfvY0NmBQ27uliW091l4'

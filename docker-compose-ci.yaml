@@ -2,7 +2,7 @@ version: '3.9'
 services:
 
   frontend:
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     restart: always
     ports:
       - 80:80
@@ -26,6 +26,19 @@ services:
     networks:
       - backend_net
       - frontend_net
+
+  telegram_bot:
+    image: puzynjailya/todolist:$GITHUB_RUN_ID
+    env_file:
+      - .env
+    environment:
+      POSTGREST_HOST: $DB_HOST
+    depends_on:
+      pg:
+        condition: service_healthy
+    command: python manage.py runbot
+    networks:
+      - backend_net
 
   migrations:
     image: puzynjailya/todolist:$GITHUB_RUN_ID

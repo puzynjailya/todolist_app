@@ -34,6 +34,7 @@ urlpatterns = [
         name='password_reset_complete',),
     path('core/', include('core.urls')),
     path('goals/', include('goals.urls')),
+    path('bot/', include('bot.urls')),
     #API swagger section
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
