@@ -185,6 +185,5 @@ SOCIAL_AUTH_VK_EXTRA_DATA = [
     ('email', 'email')
 ]
 
-
 # Telegram token
-TG_TOKEN = '5777575210:AAFqA9D6fuspSNSEfvY0NmBQ27uliW091l4'
+TG_TOKEN = env.str('TG_TOKEN')

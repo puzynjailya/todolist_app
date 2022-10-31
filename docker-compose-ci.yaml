@@ -32,7 +32,7 @@ services:
     env_file:
       - .env
     environment:
-      POSTGREST_HOST: $DB_HOST
+      POSTGREST_HOST: pg
     depends_on:
       pg:
         condition: service_healthy
