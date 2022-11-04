@@ -5,7 +5,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from core.models import User
-from goals.models import Board, BoardParticipant
+from goals.models import Board, BoardParticipant, GoalCategory
 
 
 class BoardCreateTest(APITestCase):
@@ -142,6 +142,60 @@ class BoardListTest(APITestCase):
                 "updated": timezone.localtime(self.board_1.updated).isoformat(),
                 "title": "z_test_board",
                 "is_deleted": False
+            }
+        ]
+        self.assertListEqual(response.json(), response_expected)
+
+
+
+class GoalListTest(APITestCase):
+
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(username='test_user', password='!@#qwe123')
+        self.board_1 = Board.objects.create(title='z_test_board')
+        BoardParticipant.objects.create(board=self.board_1, user=self.user, role=BoardParticipant.Roles.owner)
+        self.cat_1 = GoalCategory.objects.create(board=self.board_1, title='test_category_2')
+        self.cat_2 = GoalCategory.objects.create(board=self.board_1, title='test_category_1')
+        self.url = reverse('list-category')
+
+    def test_auth_required(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_cat_list(self):
+        self.client.force_login(self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_expected = [
+            {
+                "id": self.cat_2.id,
+                "user": {
+                    "id": self.user.id,
+                    "username": "test_user",
+                    "first_name": "",
+                    "last_name": "",
+                    "email": ""
+                },
+                "created": timezone.localtime(self.cat_2.created).isoformat(),
+                "updated": timezone.localtime(self.cat_2.updated).isoformat(),
+                "title": 'test_category_1',
+                "is_deleted": False,
+                "board": self.board_1.id
+            },
+            {
+                "id": self.cat_1.id,
+                "user": {
+                    "id": self.user.id,
+                    "username": "test_user",
+                    "first_name": "",
+                    "last_name": "",
+                    "email": ""
+                },
+                "created": timezone.localtime(self.cat_1.created).isoformat(),
+                "updated": timezone.localtime(self.cat_1.updated).isoformat(),
+                "title": "test_category_2",
+                "is_deleted": False,
+                "board": self.board_1.id
             }
         ]
         self.assertListEqual(response.json(), response_expected)
