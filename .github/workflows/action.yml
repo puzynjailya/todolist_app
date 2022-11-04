@@ -25,8 +25,7 @@ jobs:
           docker-compose build
       - name: Run tests
         run: |
-          docker-compose run -rmi todolist_api python manage.py test
-
+          docker-compose run -rm todolist_api python manage.py test
 
   build_and_push:
     runs-on: ubuntu-latest
