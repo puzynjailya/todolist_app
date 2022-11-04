@@ -6,22 +6,22 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG: False
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_PORT: ${{ secrets.DB_PORT }}
-      DB_ENGINE: ${{ secrets.DB_ENGINE }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      VK_OAUTH2_KEY: ${{ secrets.VK_OAUTH2_KEY }}
-      VK_OAUTH2_SECRET: ${{ secrets.VK_OAUTH2_SECRET }}
-      TG_TOKEN: ${{ secrets.TG_TOKEN }}
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        DB_NAME: postgres
+        DB_HOST: pg
+        DB_PORT: 5432
+        DB_ENGINE: django.db.backends.postgresql_psycopg2
+        SECRET_KEY: 'hello-world-qwerty'
+        VK_OAUTH2_KEY: 112233445566778899
+        VK_OAUTH2_SECRET: 112233445566778899
+        TG_TOKEN: '0000000000:helloworld123'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Create env file and run docker-compose
         run: |
-          ./configs/.env.deploy > .env
+          env > .env
           docker-compose build
       - name: Run tests
         run: docker-compose run -rmi api python3 manage.py test
