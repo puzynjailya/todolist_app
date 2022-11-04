@@ -24,7 +24,8 @@ jobs:
           env > .env
           docker-compose build
       - name: Run tests
-        run: docker-compose run -rmi api python3 manage.py test
+        run: |
+          docker-compose run -rmi todolist_api python manage.py test
 
 
   build_and_push:
