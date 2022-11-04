@@ -23,13 +23,17 @@ jobs:
         run: |
           env > .env
           docker-compose build
-      - name: Run tests
+      - name: Run_tests
         run: |
           docker-compose run api python manage.py test
-      - name: check logs
+      - name: check_logs
         run: |
-        docker-compose logs api
-        docker logs todolist_api_1
+          docker-compose logs api
+          docker logs todolist_api_1
+      - name: docker_down_and_clear_data
+        run: |
+          docker-compose down
+          docker image prune -a -f
 
 
   build_and_push:
