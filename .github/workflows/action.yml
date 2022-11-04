@@ -28,6 +28,8 @@ jobs:
           pwd
           ls -la
           cat docker-compose.yaml
+          docker ps
+          docker-compose ps
       - name: Run_tests
         run: |
           docker-compose run --rm api python manage.py test
