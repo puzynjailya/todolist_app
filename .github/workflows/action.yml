@@ -5,7 +5,7 @@ jobs:
   run_tests:
     runs-on: ubuntu-latest
     env:
-      DEBUG: False
+      DEBUG: True
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: postgres
@@ -22,7 +22,7 @@ jobs:
       - name: Create env file and run docker-compose
         run: |
           env > .env
-          docker-compose build
+          docker-compose build --quiet
       - name: Run_tests
         run: |
           docker-compose run --rm api python manage.py test
