@@ -11,16 +11,16 @@ from core.serializers import UserRegistrationSerializer, UserLoginSerializer, Ge
     UpdatePasswordSerializer
 
 
-@extend_schema(description='Тут будет большое и красивое описание',
-               summary='А тут будет красивое саммари')
+@extend_schema(description='Страница регистрации',
+               summary='Сервис регистрации нового пользователя')
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny]
 
 
-@extend_schema(description='Тут будет большое и красивое описание',
-               summary='А тут будет красивое саммари')
+@extend_schema(description='Страница логина',
+               summary='Сервис входа пользователя')
 class UserLoginView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
 
@@ -31,7 +31,8 @@ class UserLoginView(generics.GenericAPIView):
         return Response(serializer.data)
 
 
-@extend_schema_view(description='Тут будет большое и красивое описание')
+@extend_schema_view(description='Страница обновления данных о пользователе',
+                    summary='Сервис обновления данных о пользователе')
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class GetAndUpdateUserView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
@@ -46,7 +47,7 @@ class GetAndUpdateUserView(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@extend_schema_view(description='Тут будет большое и красивое описание')
+@extend_schema_view(description='Страница Обновления пароля пользователя')
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class UpdateUserPasswordView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
@@ -54,8 +55,6 @@ class UpdateUserPasswordView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user
-
-#203304d61be0
 
 
 

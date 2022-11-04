@@ -15,7 +15,7 @@ from goals.serializers import CreateGoalCategorySerializer, ListGoalCategorySeri
 class BoardCreateView(generics.CreateAPIView):
     model = Board
     serializer_class = BoardCreateSerializer
-    permission_classes = [permissions.IsAuthenticated, BoardPermission]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class BoardListView(generics.ListAPIView):

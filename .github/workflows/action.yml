@@ -1,6 +1,33 @@
 name: Continious Integration
 on: [push]
 jobs:
+
+  run_tests:
+    runs-on: ubuntu-latest
+    if: github.event == 'pull_request'
+    env:
+      DEBUG: False
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_ENGINE: ${{ secrets.DB_ENGINE }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      VK_OAUTH2_KEY: ${{ secrets.VK_OAUTH2_KEY }}
+      VK_OAUTH2_SECRET: ${{ secrets.VK_OAUTH2_SECRET }}
+      TG_TOKEN: ${{ secrets.TG_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Create env file and run docker-compose
+        run: |
+          ./configs/.env.deploy > .env
+          docker-compose build
+      - name: Run tests
+        run: docker-compose run -rmi api python3 manage.py test
+
+
   build_and_push:
     runs-on: ubuntu-latest
     steps:
@@ -16,6 +43,7 @@ jobs:
       # Push container
       - name: docker push
         run: docker push puzynjailya/todolist:$GITHUB_RUN_ID
+
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push

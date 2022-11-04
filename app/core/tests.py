@@ -15,9 +15,9 @@ class SignUpTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(response.json(),
                              {
-                                'username': ['This field is reqiured.'],
-                                'password': ['This field is reqiured.'],
-                                'password_repeat': ['This field is reqiured.']
+                                'username':  ['Обязательное поле.'],
+                                'password':  ['Обязательное поле.'],
+                                'password_repeat':  ['Обязательное поле.']
                             })
 
     def test_weak_password(self):
@@ -40,7 +40,7 @@ class SignUpTestCase(APITestCase):
                                         'password_repeat': '$%^qwe123'
                                     })
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.json, {'username':'A user with username already exist.'})
+        self.assertDictEqual(response.json(), {'username': ['Пользователь с таким именем уже существует.']})
 
     def test_email_validation(self):
         url = reverse('signup')
@@ -52,7 +52,7 @@ class SignUpTestCase(APITestCase):
                                         'email': 'invalid_email'
                                     })
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.json, {'email': "Enter a valid email address."})
+        self.assertDictEqual(response.json(), {'email': ["Введите правильный адрес электронной почты."]})
 
     def test_passwords_not_matching(self):
         url = reverse('signup')
@@ -63,8 +63,8 @@ class SignUpTestCase(APITestCase):
                                         'password_repeat': '$%^qwe1231',
                                     })
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.json,
-                             {"non_field_errors": "Введенные пароли не совпадают! Пожалуйста, попробуйте еще раз."}
+        self.assertDictEqual(response.json(),
+                             {"non_field_errors": ["Введенные пароли не совпадают! Пожалуйста, попробуйте еще раз."]}
                              )
 
     def test_signup_with_only_required_fields(self):
@@ -77,10 +77,10 @@ class SignUpTestCase(APITestCase):
                                     })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_user = User.objects.last()
-        self.assertDictEqual(response.json,
+        self.assertDictEqual(response.json(),
                              {
-                                'id': new_user.id,
                                 'username': 'test_user',
+                                'email': '',
                                 'first_name': '',
                                 'last_name': ''
                              }
@@ -101,9 +101,8 @@ class SignUpTestCase(APITestCase):
                                     })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_user = User.objects.last()
-        self.assertDictEqual(response.json,
+        self.assertDictEqual(response.json(),
                              {
-                                 'id': new_user.id,
                                  'username': 'test_user_2',
                                  'email': 'test@test.com',
                                  'first_name': 'Hello',
@@ -115,7 +114,7 @@ class SignUpTestCase(APITestCase):
 class LoginTestCase(APITestCase):
 
     def setUp(self) -> None:
-        self.user = User.objects.create(
+        self.user = User.objects.create_user(
             username='test_user',
             password='!@#qwe123',
             email='test@test.com'
@@ -146,11 +145,11 @@ class LoginTestCase(APITestCase):
                                         'username': '',
                                         'password': ''
                                     })
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertDictEqual(response.json,
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(response.json(),
                              {
-                                'username': "This field may not be blank.",
-                                'password': "This field may not be blank."
+                                'username': ['Это поле не может быть пустым.'],
+                                'password': ['Это поле не может быть пустым.']
                              })
 
     def test_successful_login(self):
@@ -161,13 +160,9 @@ class LoginTestCase(APITestCase):
                                         'password': '!@#qwe123'
                                     })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertDictEqual(response.json,
+        self.assertDictEqual(response.json(),
                              {
-                                 'id': self.user.id,
                                  'username': 'test_user',
-                                 'email': self.user.email,
-                                 'first_name': self.user.first_name,
-                                 'last_name': self.user.last_name
                              })
         self.assertNotEqual(response.cookies['sessionid'].value, '')
 
@@ -175,22 +170,21 @@ class LoginTestCase(APITestCase):
 class TestProfile(APITestCase):
 
     def setUp(self) -> None:
-        self.user = User.objects.create(
+        self.user = User.objects.create_user(
             username='test_user',
-            password='!@#qwe123',
-            email='test@test.com'
+            password='!@#qwe123'
         )
 
     def test_logout(self):
         url = reverse('profile')
-        self.client.login(username='test_user', password='!@#qwe123')
+        self.client.force_login(self.user)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response.cookies['sessionid'].value, '')
 
     def test_retrieve_user_data(self):
         url = reverse('profile')
-        self.client.login(username='test_user', password='!@#qwe123')
+        self.client.force_login(self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertDictEqual(response.json(),
@@ -204,7 +198,7 @@ class TestProfile(APITestCase):
 
     def test_patch_user_data(self):
         url = reverse('profile')
-        self.client.login(username='test_user', password='!@#qwe123')
+        self.client.force_login(self.user)
         self.assertEqual(self.user.first_name, '')
         response = self.client.patch(url, {'first_name': 'Test'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -221,7 +215,7 @@ class TestProfile(APITestCase):
 class TestUpdatePassword(APITestCase):
 
     def setUp(self) -> None:
-        self.user = User.objects.create(
+        self.user = User.objects.create_user(
             username='test_user',
             password='!@#qwe123',
             email='test@test.com'
@@ -237,23 +231,25 @@ class TestUpdatePassword(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_invalid_old_password(self):
+        self.client.force_login(self.user)
         url = reverse('update-password')
         response = self.client.patch(url,
                                      {
                                          'old_password': 'something_wrong',
-                                         'new_password': '!@#qwe123123'
+                                         'new_password': '!@#qwe123'
                                      })
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_successful_change(self):
-        self.client.login(username='test_user', password='!@#qwe123')
+        self.client.force_login(self.user)
         url = reverse('update-password')
-        response = self.client.patch(url,
-                                     {
-                                         'old_password': '!@#qwe123',
-                                         'new_password': '!@#qwe123123'
-                                     })
+        response = self.client.patch(url, data={
+                                         "old_password": "!@#qwe123",
+                                         "new_password": "!@#qwe123!@#"
+                                             })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertDictEqual(response.json(), '')
-        self.assertNotEqual(self.user.password, '$%^qwe123123')
-        self.assertTrue(self.user.check_password('$%^qwe123'))
+        self.assertDictEqual(response.json(), {})
+        self.user.refresh_from_db(fields=('password',))
+        self.assertNotEqual(self.user.password, '!@#qwe123!@#')
+        self.assertTrue(self.user.check_password('!@#qwe123!@#'))
+

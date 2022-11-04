@@ -8,3 +8,7 @@ postgres_data
 .cache
 __pycache__
 templates
+
+app/static
+app/**/tests
+app/**/test*.py
