@@ -21,13 +21,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Create env file and run docker-compose
         run: |
+          pwd
           env > .env
           docker-compose build
       - name: Run tests
         run: |
+          pwd
           docker-compose run --rm api python manage.py test
-      - name: show container log
-        run: docker logs todolist_api_1
 
   build_and_push:
     runs-on: ubuntu-latest
