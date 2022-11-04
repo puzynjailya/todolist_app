@@ -18,14 +18,13 @@ jobs:
       TG_TOKEN: '0000000000:helloworld123'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Create env file and run docker-compose
         run: |
           env > .env
           docker-compose build
       - name: Run tests
         run: |
-          resolvectl
           docker-compose run --rm api python manage.py test
 
   build_and_push:
