@@ -17,9 +17,9 @@ services:
       context: .
     env_file:
       - .env
-    environment:
+    #environment:
       #SECRET_KEY: RfUjXn2r5u8x/A?D*G-KaPdSgVkYp3s6
-      POSTGREST_HOST: pg
+      #POSTGREST_HOST: pg
     image: puzynjailya/todolist
     ports:
       - 8000:8000
