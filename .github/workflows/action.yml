@@ -25,8 +25,7 @@ jobs:
           docker-compose build
       - name: Run tests
         run: |
-          hostnamectl
-          dnsdomainname
+          resolvectl
           docker-compose run --rm api python manage.py test
 
   build_and_push:
