@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: stop_old_containers
+        run: docker-compose down
       - name: Create env file and run docker-compose
         run: |
           env > .env
@@ -26,15 +28,6 @@ jobs:
       - name: Run_tests
         run: |
           docker-compose run api python manage.py test
-      - name: check_logs
-        run: |
-          docker-compose logs api
-          docker logs todolist_api_1
-      - name: docker_down_and_clear_data
-        run: |
-          docker-compose down
-          docker image prune -a -f
-
 
   build_and_push:
     runs-on: ubuntu-latest
