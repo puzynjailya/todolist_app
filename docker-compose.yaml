@@ -1,0 +1,93 @@
+version: '3.9'
+services:
+
+  frontend:
+    image: sermalenk/skypro-front:lesson-38
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./todo-list-frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./configs/static/:/opt/static/
+    networks:
+      - frontend_net
+
+  api:
+    build:
+      context: .
+    env_file:
+      - app\.env
+    environment:
+      SECRET_KEY: RfUjXn2r5u8x/A?D*G-KaPdSgVkYp3s6
+    image: puzynjailya/todolist
+    ports:
+      - 8000:8000
+    restart: always
+    depends_on:
+      pg:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    volumes:
+      - .:/code/
+    networks:
+      - backend_net
+      - frontend_net
+
+  migrations:
+    build:
+      context: .
+    env_file:
+      - app\.env
+    environment:
+      POSTGREST_HOST: pg
+    image: puzynjailya/todolist
+    depends_on:
+      pg:
+        condition: service_healthy
+    command: bash -c "python manage.py migrate"
+    volumes:
+      - .:/code/
+    networks:
+      - backend_net
+
+  pg:
+    image: postgres:14.5-alpine
+    environment:
+      POSTGRES_DB: tdl_db
+      POSTGRES_USER: tdl_2022
+      POSTGRES_PASSWORD: G3OWuzMdhY7SHlsgyeChKbU_oP26yItgptzapVoh9gk
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend_net
+
+  telegram_bot:
+    build:
+      context: .
+    env_file:
+      - app\.env
+    environment:
+      POSTGREST_HOST: pg
+    image: puzynjailya/todolist
+    depends_on:
+      pg:
+        condition: service_healthy
+    command: python manage.py runbot
+    networks:
+      - backend_net
+
+volumes:
+  postgres_data:
+
+networks:
+  backend_net:
+    driver: bridge
+  frontend_net:
+    driver: bridge
+
