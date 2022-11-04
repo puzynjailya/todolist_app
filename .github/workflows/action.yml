@@ -22,15 +22,10 @@ jobs:
         run: |
           env > .env
           docker-compose build
-      - name: Display current folder
-        run: |
-          pwd
-          ls -la
-          cat docker-compose.yaml
-          cat .env
       - name: Run_tests
         run: |
           docker-compose run --rm api python manage.py test
+          docker ps -aqf "name=todolist_api_1"
 
   build_and_push:
     runs-on: ubuntu-latest
