@@ -26,7 +26,9 @@ env = environ.Env(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Take environment variables from .env.deploy file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+ENV_FILE = BASE_DIR.joinpath('.env')
+if ENV_FILE.exists():
+    environ.Env.read_env(ENV_FILE)
 
 # False if not in os.environ because of casting above
 # SECURITY WARNING: don't run with debug turned on in production!
