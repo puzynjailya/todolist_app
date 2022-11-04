@@ -29,11 +29,7 @@ jobs:
 
   build_and_push:
     runs-on: ubuntu-latest
-    on:
-      push:
-        # Sequence of patterns matched against refs/heads
-        branches_ignore:
-          - tests
+    if: github.ref_name != 'tests'
     steps:
       # Code clone
       - name: clone code
@@ -50,11 +46,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    on:
-      push:
-        # Sequence of patterns matched against refs/heads
-        branches_ignore:
-          - tests
+    if: github.ref_name != 'tests'
     needs: build_and_push
     env:
       DB_USER: ${{ secrets.DB_USER }}
