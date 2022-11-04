@@ -23,6 +23,11 @@ jobs:
         run: |
           env > .env
           docker-compose build
+      - name: Display current folder
+        run: |
+          pwd
+          ls -la
+          cat docker-compose.yaml
       - name: Run_tests
         run: |
           docker-compose run --rm api python manage.py test
