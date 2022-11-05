@@ -6,13 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEBUG: True
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: postgres
-      DB_PORT: 5432
-      DB_HOST: pg
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_NAME: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: pg
       DB_ENGINE: django.db.backends.postgresql_psycopg2
-      SECRET_KEY: 'hello-world-qwerty'
+      SECRET_KEY: 'helloworldqwerty'
       VK_OAUTH2_KEY: 112233445566778899
       VK_OAUTH2_SECRET: 112233445566778899
       TG_TOKEN: '0000000000:helloworld123'
@@ -22,7 +22,7 @@ jobs:
       - name: Create env file and run docker-compose
         run: |
           env > .env
-          docker-compose build --quiet
+          docker-compose build
       - name: Run_tests
         run: |
           docker-compose run --rm api python manage.py test
@@ -51,11 +51,11 @@ jobs:
     if: github.ref_name != 'tests'
     needs: build_and_push
     env:
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_PORT: ${{ secrets.DB_PORT }}
+      POSTGRES_USER: ${{ secrets.DB_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      POSTGRES_NAME: ${{ secrets.DB_NAME }}
+      POSTGRES_HOST: ${{ secrets.DB_HOST }}
+      POSTGRES_PORT: ${{ secrets.DB_PORT }}
       DB_ENGINE: ${{ secrets.DB_ENGINE }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       VK_OAUTH2_KEY: ${{ secrets.VK_OAUTH2_KEY }}
@@ -108,6 +108,3 @@ jobs:
           script:  |
             cd todolist
             docker image prune -a -f
-
-
-
