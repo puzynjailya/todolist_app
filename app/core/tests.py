@@ -1,5 +1,4 @@
 from django.contrib.auth.hashers import make_password
-from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -7,7 +6,7 @@ from rest_framework.test import APITestCase
 from core.models import User
 
 
-class SignUpTestCase(APITestCase):
+class SignUpTest(APITestCase):
 
     def test_empty_request(self):
         url = reverse('signup')
@@ -111,7 +110,7 @@ class SignUpTestCase(APITestCase):
                              )
 
 
-class LoginTestCase(APITestCase):
+class LoginTest(APITestCase):
 
     def setUp(self) -> None:
         self.user = User.objects.create_user(
@@ -167,7 +166,7 @@ class LoginTestCase(APITestCase):
         self.assertNotEqual(response.cookies['sessionid'].value, '')
 
 
-class TestProfile(APITestCase):
+class ProfileTest(APITestCase):
 
     def setUp(self) -> None:
         self.user = User.objects.create_user(
@@ -212,7 +211,7 @@ class TestProfile(APITestCase):
                              })
 
 
-class TestUpdatePassword(APITestCase):
+class UpdatePasswordTest(APITestCase):
 
     def setUp(self) -> None:
         self.user = User.objects.create_user(
