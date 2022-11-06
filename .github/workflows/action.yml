@@ -26,11 +26,17 @@ jobs:
       - name: Run_tests
         run: |
           docker-compose run --rm api python3 manage.py test
+      - name: Generate Report
+        run: |
+          pip install coverage
+          docker-compose run --rm api coverage run -m manage.py test
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
+          files:
+            - ./coverage.xml
+            - .coverage
 
   build_and_push:
     runs-on: ubuntu-latest
