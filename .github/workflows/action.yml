@@ -34,9 +34,12 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files:
-            ./coverage.xml
-            ./coverage
+          files: ./coverage.xml,./coverage
+          directory:
+            ./coverage/reports/
+          fail_ci_if_error: false
+          verbose: true
+          path_to_write_report: ./coverage/codecov_report.txt
 
   build_and_push:
     runs-on: ubuntu-latest
