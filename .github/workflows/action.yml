@@ -8,7 +8,7 @@ jobs:
       DEBUG: True
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_NAME: postgres
+      POSTGRES_DB: postgres
       POSTGRES_PORT: 5432
       POSTGRES_HOST: pg
       DB_ENGINE: django.db.backends.postgresql_psycopg2
@@ -26,7 +26,7 @@ jobs:
       - name: Run_tests
         run: |
           cat app/core/tests.py
-          docker-compose run --rm api python manage.py test
+          docker-compose run --rm api python3 manage.py test
 
   build_and_push:
     runs-on: ubuntu-latest
