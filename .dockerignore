@@ -8,3 +8,7 @@ postgres_data
 .cache
 __pycache__
 templates
+
+# Next lines will be commented until solution why tests are not initializing will not be found
+# app/**/tests
+# app/**/test*.py
