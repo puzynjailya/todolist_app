@@ -70,3 +70,10 @@ __pypackages__/
 .idea/
 ./django_static
 /todo-list-frontend/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
