@@ -35,8 +35,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files:
-            - ./coverage.xml
-            - .coverage
+            ./coverage.xml
+            .coverage
 
   build_and_push:
     runs-on: ubuntu-latest
