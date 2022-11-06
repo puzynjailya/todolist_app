@@ -29,7 +29,7 @@ jobs:
       - name: Generate Report
         run: |
           pip install coverage
-          docker-compose run --rm api coverage run -m manage.py test
+          docker-compose run --rm api coverage run manage.py test
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
