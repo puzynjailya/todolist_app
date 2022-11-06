@@ -99,7 +99,7 @@ DATABASES = {
     'default':
         {
             'ENGINE': env('DB_ENGINE'),
-            'NAME': env('POSTGRES_NAME'),
+            'NAME': env('POSTGRES_DB'),
             'USER': env('POSTGRES_USER'),
             'PASSWORD': env('POSTGRES_PASSWORD'),
             'HOST': env('POSTGRES_HOST', default='127.0.0.1'),
@@ -162,7 +162,7 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 SPECTACULAR_SETTINGS = {

@@ -147,15 +147,14 @@ class BoardListTest(APITestCase):
         self.assertListEqual(response.json(), response_expected)
 
 
-
 class GoalListTest(APITestCase):
 
     def setUp(self) -> None:
         self.user = User.objects.create_user(username='test_user', password='!@#qwe123')
         self.board_1 = Board.objects.create(title='z_test_board')
         BoardParticipant.objects.create(board=self.board_1, user=self.user, role=BoardParticipant.Roles.owner)
-        self.cat_1 = GoalCategory.objects.create(board=self.board_1, title='test_category_2')
-        self.cat_2 = GoalCategory.objects.create(board=self.board_1, title='test_category_1')
+        self.cat_1 = GoalCategory.objects.create(board=self.board_1, title='test_category_2', user_id=self.user.id)
+        self.cat_2 = GoalCategory.objects.create(board=self.board_1, title='test_category_1', user_id=self.user.id)
         self.url = reverse('list-category')
 
     def test_auth_required(self):
