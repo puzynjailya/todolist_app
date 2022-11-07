@@ -2,6 +2,8 @@
 [run]
 branch = True
 command_line = coverage xml
+source = .
+omit = */migrations/*, */urls.py, */settings/*, */wsgi.py, manage.py
 
 [report]
 # Regexes for lines to exclude from consideration
