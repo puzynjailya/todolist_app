@@ -1,9 +1,7 @@
 # .coveragerc to control coverage.py
 [run]
 branch = True
-command_line = xml
-
-
+command_line = coverage xml
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -29,4 +27,4 @@ exclude_lines =
 ignore_errors = True
 
 [xml]
-output = './'
+output = ./
