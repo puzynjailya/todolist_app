@@ -75,5 +75,4 @@ __pypackages__/
 htmlcov/
 .coverage
 .coverage.*
-coverage.xml
 *.cover
